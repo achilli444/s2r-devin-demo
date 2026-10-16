@@ -1,0 +1,23 @@
+
+5. Printing statistics.
+
+=== fir_decim2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2312 wires
+     3996 wire bits
+       42 public wires
+     1177 public wire bits
+        6 ports
+       59 port bits
+     1923 cells
+        1   BUFG
+      133   CARRY4
+       11   DSP48E2
+      408   FDCE
+      861   FDRE
+        2   INV
+      473   LUT2
+       34   SRL16E
+
