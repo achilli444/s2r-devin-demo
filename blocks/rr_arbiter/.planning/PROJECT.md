@@ -24,7 +24,7 @@ Grant logic is purely combinational from `req` and a registered rotation pointer
 ## Verification Strategy
 
 ### Validated
-(None yet)
+- cocotb regression (Icarus + Verilator), sby proof, Yosys synth — see HARDWARE_METRICS.md
 
 ### Active Requirements (RTL & TB)
 - [ ] cocotb regression on Icarus and Verilator against a Python reference model
@@ -50,9 +50,9 @@ Grant logic is purely combinational from `req` and a registered rotation pointer
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Pointer advances to `grant_idx+1` only when a grant is issued | Classic fixed-rotation RR; idle cycles do not rotate priority | — Pending |
-| Grant selection via masked lowest-set-bit (`x & -x`) on `req & mask(ptr)` with fallback to unmasked | Two priority encoders, shallow logic; maps to carry-chain friendly LUTs | — Pending |
-| `grant_idx` derived combinationally from one-hot `grant` | Avoids a second encoder path diverging from `grant` | — Pending |
+| Pointer advances to `grant_idx+1` only when a grant is issued | Classic fixed-rotation RR; idle cycles do not rotate priority | ✓ Good |
+| Grant selection via masked lowest-set-bit (`x & -x`) on `req & mask(ptr)` with fallback to unmasked | Two priority encoders, shallow logic; maps to carry-chain friendly LUTs | ✓ Good |
+| `grant_idx` derived combinationally from one-hot `grant` | Avoids a second encoder path diverging from `grant` | ✓ Good |
 
 ---
 *Last updated: 2026-10-16 after initialization*

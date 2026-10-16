@@ -5,16 +5,15 @@
 See: .planning/PROJECT.md (updated 2026-10-16)
 
 **Core value:** 0-cycle, provably fair 8-to-1 round-robin grant
-**Current focus:** Phase 1 — RTL
+**Current focus:** v1 complete; v2 candidates: lock/hold, registered-output variant
 
 ## Current Position
 
-Phase: 1 of 3 (RTL)
-Plan: 0 of 1 in current phase
-Status: Ready to execute
-Last activity: 2026-10-16 — project initialized from SPEC.md
+Phase: 3 of 3 (Synthesis) — all phases complete
+Status: Milestone v1 complete
+Last activity: 2026-10-16 — synthesis metrics recorded
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Accumulated Context
 
@@ -29,4 +28,4 @@ None yet.
 
 ## Session Continuity
 
-Next: `/s2r:execute-phase 1` (plans are small enough that plan-phase was folded into the roadmap).
+Next: `/s2r:complete-milestone` or `/s2r:new-milestone` for v2 (FUNC-07/08). Vivado sign-off pending on customer side.
