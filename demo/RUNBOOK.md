@@ -81,7 +81,7 @@ Expect: `successful proof by k-induction`, 3 covers reached; Yosys ~70 FF / ~37 
 ## 5. Reset after a dry run
 
 ```bash
-rm -rf blocks/axis_skid/.git && git checkout -- blocks/axis_skid && git clean -fdx blocks/axis_skid    # back to SPEC.md only (also drops a nested repo if an older skill version ran git init there)
+cd ~/s2r-devin-demo && rm -rf blocks/axis_skid/.git && git checkout -- blocks/axis_skid && git clean -fdx blocks/axis_skid    # from the repo root; back to SPEC.md only (also drops a nested repo if an older skill version ran git init there)
 git reset --hard origin/main     # if Devin committed during the dry run
 ```
 
