@@ -132,7 +132,7 @@ Runtime target: 22–25 min after cuts.
 **SAY**
 "A skid buffer, for anyone new to it: AXI-Stream moves data with a valid-ready handshake. When the downstream block says 'not ready', something has to catch the word that's already in flight. A skid buffer holds two entries so the upstream doesn't have to react in the same clock cycle. That breaks a long combinational path on `tready`, and that's what lets the chip run faster."
 
-**DO** In Devin's chat, type exactly:
+**DO** In Devin's chat, type exactly (tip: typing `/` first opens Desktop's own slash-command picker — press Esc or just keep typing; the `/s2r:` prompts are plain text that Devin resolves to the repo skills, never pick a picker entry):
 
 ```
 /s2r:new-project in blocks/axis_skid. The spec is SPEC.md. Ask me the open questions, then write .planning/PROJECT.md, REQUIREMENTS.md and ROADMAP.md with 3 phases: RTL, verification, synthesis. Keep the questioning short.

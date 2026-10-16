@@ -19,7 +19,7 @@ cd blocks/rr_arbiter && make wave      # opens Surfer/GTKWave once so it is inst
 
 Devin Desktop:
 1. Open the repo folder. Devin reads `AGENTS.md` and discovers `.devin/skills/s2r-*`.
-2. New conversation, type `/s2r:help` — the ported command list should print. If not, say "read .devin/skills/s2r-core/SKILL.md and list the s2r commands".
+2. New conversation, send `Run /s2r:help and list the Spec2RTL commands.` — the ported command list should print. Typing `/` opens Desktop's own slash-command picker (e.g. `/acp-commands:help`); the s2r skills are repo skills, not Desktop commands, so dismiss the picker (Esc) or start the message with a word, never pick an entry from it. Same for every `/s2r:` prompt below. If Devin says it does not know s2r, say "read .devin/skills/s2r-core/SKILL.md and list the s2r commands".
 3. Pin these editor tabs (left to right): `blocks/axis_skid/SPEC.md`, `.devin/skills/s2r-new-project/SKILL.md`, `.devin/skills/s2r-core/SKILL.md`, `blocks/rr_arbiter/.planning/HARDWARE_METRICS.md`.
 4. Do one timed dry run of section 3, then reset (section 5). Every number in the "expected" columns below was produced on Linux x86_64 with this repo; macOS arm64 gives the same pass/fail and cell counts, only wall-clock times differ.
 
