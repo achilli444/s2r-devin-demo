@@ -52,6 +52,7 @@ def rewrite_body(text: str) -> str:
     # Leftover upstream (GSD) naming.
     text = re.sub(r"\bgsd:", "s2r:", text)
     text = text.replace('"gsd/', '"s2r/')
+    text = re.sub(r"^\s*Co-Authored-By: Claude.*\n", "", text, flags=re.M)
     # Vendor/runtime naming.
     text = text.replace("Claude Code", "Devin")
     text = re.sub(r"\bClaude's\b", "Devin's", text)
@@ -80,7 +81,7 @@ def port_commands():
         if cmd in SKIP_COMMANDS:
             continue
         fm, body = parse_frontmatter(src.read_text())
-        desc = fm.get("description", f"Spec2RTL {cmd}")
+        desc = rewrite_body(fm.get("description", f"Spec2RTL {cmd}"))
         hint = fm.get("argument-hint", "")
         body = rewrite_body(body)
         skill_dir = SKILLS / f"s2r-{cmd}"

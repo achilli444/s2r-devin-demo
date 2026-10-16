@@ -1,6 +1,6 @@
 ---
 name: s2r-list-phase-assumptions
-description: Surface Claude's assumptions about a phase approach before planning. Use when the user types `/s2r:list-phase-assumptions` or asks for this step of the Spec2RTL hardware spec-driven flow.
+description: Surface Devin's assumptions about a phase approach before planning. Use when the user types `/s2r:list-phase-assumptions` or asks for this step of the Spec2RTL hardware spec-driven flow.
 ---
 
 > **Devin runtime.** This skill is a port of the Spec2RTL `/s2r:list-phase-assumptions` command.
