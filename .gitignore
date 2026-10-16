@@ -9,3 +9,6 @@ results_*.xml
 blocks/*/formal/*/
 blocks/*/synth/yosys.log
 blocks/*/synth/*.json
+demo/reference/*/formal/*/
+demo/reference/*/synth/yosys.log
+demo/reference/*/synth/*.json

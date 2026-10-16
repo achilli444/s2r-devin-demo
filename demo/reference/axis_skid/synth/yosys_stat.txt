@@ -1,0 +1,21 @@
+
+4. Printing statistics.
+
+=== axis_skid ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       55 wires
+      216 wire bits
+       15 public wires
+      176 public wire bits
+       12 ports
+       74 port bits
+      110 cells
+        1   BUFG
+        2   FDCE
+       68   FDRE
+        2   INV
+        3   LUT4
+       34   LUT6
+
