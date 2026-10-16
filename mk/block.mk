@@ -60,8 +60,8 @@ formal:
 
 synth:
 	@mkdir -p synth
-	yosys -q -l synth/yosys.log -p "read_verilog -sv $(SRCS); hierarchy -top $(SYNTH_TOP); synth_xilinx -family xcup -top $(SYNTH_TOP); tee -q -o synth/yosys_stat.txt stat; write_json synth/$(SYNTH_TOP).json"
-	@sed -n '/Number of cells/,$$p' synth/yosys_stat.txt
+	yosys -q -l synth/yosys.log -p "read_verilog -sv $(SRCS); hierarchy -top $(SYNTH_TOP); synth_xilinx -family xcup -noiopad -top $(SYNTH_TOP); tee -q -o synth/yosys_stat.txt stat; write_json synth/$(SYNTH_TOP).json"
+	@grep -v "^$$" synth/yosys_stat.txt | grep -v "Printing statistics\|^===\|Local Count\|^ *| *$$"
 
 synth-vivado:
 	@if command -v vivado >/dev/null 2>&1; then (cd synth && vivado -mode batch -source vivado_synth.tcl); \

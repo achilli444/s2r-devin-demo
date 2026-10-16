@@ -46,6 +46,19 @@ else
   echo ">> OSS CAD Suite already present at $EDA_DIR/oss-cad-suite ($(cat oss-cad-suite/VERSION_TAG 2>/dev/null || echo unknown))"
 fi
 
+# ---- cocotb-compatible simulator shims ----------------------------------------
+# The suite's bin/ wrappers export PYTHONHOME to its bundled Python 3.11; cocotb embeds the
+# .venv Python instead and dies with "failed to get the Python codec". Make copies of the
+# simulator wrappers (which do not need Python themselves) with those exports removed.
+mkdir -p "$EDA_DIR/bin-nopy"
+for t in iverilog vvp verilator verilator_bin; do
+  [ -f "$EDA_DIR/oss-cad-suite/bin/$t" ] || continue
+  sed -e '/PYTHONHOME/d' -e '/PYTHONEXECUTABLE/d' \
+      -e "s|^release_bindir=.*|release_bindir=\"$EDA_DIR/oss-cad-suite/bin\"|" \
+      "$EDA_DIR/oss-cad-suite/bin/$t" > "$EDA_DIR/bin-nopy/$t"
+  chmod +x "$EDA_DIR/bin-nopy/$t"
+done
+
 # ---- Verible (optional) ------------------------------------------------------
 if ! command -v verible-verilog-lint >/dev/null 2>&1 && [ ! -x "$EDA_DIR/verible/bin/verible-verilog-lint" ]; then
   echo ">> installing Verible"
