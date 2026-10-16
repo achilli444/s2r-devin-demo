@@ -5,3 +5,7 @@ sim_build/
 *.fst
 __pycache__/
 .venv/
+results_*.xml
+blocks/*/formal/*/
+blocks/*/synth/yosys.log
+blocks/*/synth/*.json
