@@ -1,0 +1,86 @@
+---
+name: s2r-discuss-phase
+description: Gather phase context through adaptive questioning before planning. Use when the user types `/s2r:discuss-phase` or asks for this step of the Spec2RTL hardware spec-driven flow.
+---
+
+> **Devin runtime.** This skill is a port of the Spec2RTL `/s2r:discuss-phase` command.
+> Before following it, read `.devin/skills/s2r-core/SKILL.md` (tool mapping, path conventions, what to ignore).
+> Any path under `.devin/skills/s2r-core/` or `.planning/` that this skill lists is a file you must read.
+> `Task(...)` = spawn a subagent whose prompt starts with the named agent file from `.devin/skills/s2r-core/agents/`.
+> `AskUserQuestion` = ask the user with `message_user` (`content_type=user_question`).
+> `model=...` / model profiles are ignored on Devin.
+
+Usage: `/s2r:discuss-phase <phase>`
+
+<objective>
+Extract implementation decisions that downstream agents need — researcher and planner will use CONTEXT.md to know what to investigate and what choices are locked.
+
+**How it works:**
+1. Analyze the phase to identify gray areas (UI, UX, behavior, etc.)
+2. Present gray areas — user selects which to discuss
+3. Deep-dive each selected area until satisfied
+4. Create CONTEXT.md with decisions that guide research and planning
+
+**Output:** `{phase}-CONTEXT.md` — decisions clear enough that downstream agents can act without asking the user again
+</objective>
+
+<execution_context>
+Read `.devin/skills/s2r-core/workflows/discuss-phase.md`
+Read `.devin/skills/s2r-core/templates/context.md`
+</execution_context>
+
+<context>
+Phase number: $ARGUMENTS (required)
+
+**Load project state:**
+Read `.planning/STATE.md`
+**Load roadmap:**
+Read `.planning/ROADMAP.md`
+</context>
+
+<process>
+1. Validate phase number (error if missing or not in roadmap)
+2. Check if CONTEXT.md exists (offer update/view/skip if yes)
+3. **Analyze phase** — Identify domain and generate phase-specific gray areas
+4. **Present gray areas** — Multi-select: which to discuss? (NO skip option)
+5. **Deep-dive each area** — 4 questions per area, then offer more/next
+6. **Write CONTEXT.md** — Sections match areas discussed
+7. Offer next steps (research or plan)
+
+**CRITICAL: Scope guardrail**
+- Phase boundary from ROADMAP.md is FIXED
+- Discussion clarifies HOW to implement, not WHETHER to add more
+- If user suggests new capabilities: "That's its own phase. I'll note it for later."
+- Capture deferred ideas — don't lose them, don't act on them
+
+**Domain-aware gray areas:**
+Gray areas depend on what's being built. Analyze the phase goal:
+- Something users SEE → layout, density, interactions, states
+- Something users CALL → responses, errors, auth, versioning
+- Something users RUN → output format, flags, modes, error handling
+- Something users READ → structure, tone, depth, flow
+- Something being ORGANIZED → criteria, grouping, naming, exceptions
+
+Generate 3-4 **phase-specific** gray areas, not generic categories.
+
+**Probing depth:**
+- Ask 4 questions per area before checking
+- "More questions about [area], or move to next?"
+- If more → ask 4 more, check again
+- After all areas → "Ready to create context?"
+
+**Do NOT ask about (Devin handles these):**
+- Technical implementation
+- Architecture choices
+- Performance concerns
+- Scope expansion
+</process>
+
+<success_criteria>
+- Gray areas identified through intelligent analysis
+- User chose which areas to discuss
+- Each selected area explored until satisfied
+- Scope creep redirected to deferred ideas
+- CONTEXT.md captures decisions, not vague vision
+- User knows next steps
+</success_criteria>

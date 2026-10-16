@@ -1,0 +1,7 @@
+.planning/**/*.tmp
+obj_dir/
+sim_build/
+*.vcd
+*.fst
+__pycache__/
+.venv/
