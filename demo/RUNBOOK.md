@@ -7,7 +7,8 @@ Icarus + GTKWave, now driven by Devin following the Spec2RTL skills, with lint/f
 ## 0. Pre-demo setup (macOS, do the day before)
 
 ```bash
-git clone https://github.com/achilli444/s2r-devin-demo && cd s2r-devin-demo
+git clone https://github.com/achilli444/s2r-devin-demo
+cd s2r-devin-demo       # every command below runs from inside the repo
 make install            # OSS CAD Suite (~1 GB) + Verible into ~/eda, Python venv in .venv; 5-10 min
 # macOS Gatekeeper: if any tool dies with "cannot be opened because the developer cannot be verified":
 xattr -dr com.apple.quarantine ~/eda
