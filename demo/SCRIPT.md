@@ -245,7 +245,7 @@ Run the s2r execute-phase skill for phase 3: add SymbiYosys properties — AXI-S
 
 **DO** Terminal: `make synth`. Open `.planning/HARDWARE_METRICS.md`.
 
-**SEE** Roughly 70 flip-flops, under 40 LUTs, zero DSP, zero BRAM.
+**SEE** Roughly 70 flip-flops, under 40 LUTs, zero DSP, zero BRAM. Last line: `vivado hand-off written: synth/vivado_synth.tcl, synth/constraints.xdc` — `make synth` generates the Vivado script for every block.
 
 **SAY**
 "Synthesis: about seventy flip-flops and under forty LUTs for a thirty-two-bit, two-deep buffer with sidebands. No DSPs, no block RAM. Target versus actual is recorded here, and again the Vivado Tcl in `synth` is the hand-off for the real timing number."

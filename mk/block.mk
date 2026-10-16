@@ -4,6 +4,7 @@
 #   TESTS      cocotb test module(s) in tb/  (python module names)
 #   SBY        formal config(s) in formal/ (optional)
 #   SYNTH_TOP  synthesis top if different from TOP (optional)
+#   CLK_PORT / CLK_MHZ / PART  for the generated Vivado hand-off (default clk / 300 / ZCU111 RFSoC)
 # then: include ../../mk/block.mk
 #
 # Simulator selection: SIM=icarus (default) | verilator | questa | xcelium | vcs ...
@@ -13,6 +14,9 @@ WAVES      ?= 1
 TOPLEVEL_LANG = verilog
 TOPLEVEL   = $(TOP)
 SYNTH_TOP  ?= $(TOP)
+CLK_PORT   ?= clk
+CLK_MHZ    ?= 300
+PART       ?= xczu28dr-ffvg1517-2-e
 BLOCK_DIR  := $(abspath .)
 ROOT_DIR   := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))..)
 VERILOG_SOURCES = $(abspath $(SRCS))
@@ -28,13 +32,14 @@ ifeq ($(SIM),verilator)
   EXTRA_ARGS += --timing -Wall -Wno-fatal
 endif
 
-.PHONY: help lint lint-verilator lint-verible sim wave formal synth synth-vivado clean-block
+.PHONY: help lint lint-verilator lint-verible sim wave formal synth vivado-tcl synth-vivado clean-block
 help:
 	@echo "make lint          verilator --lint-only -Wall (+ verible if installed)"
 	@echo "make sim [SIM=icarus|verilator|questa] [TESTS=...] [COCOTB_TESTCASE=...]"
 	@echo "make wave          open the last waveform in surfer/gtkwave"
 	@echo "make formal        sby -f formal/*.sby"
-	@echo "make synth         yosys synth_xilinx -family xcup -> synth/yosys_stat.txt"
+	@echo "make synth         yosys synth_xilinx -family xcup -> synth/yosys_stat.txt (+ Vivado hand-off, see vivado-tcl)"
+	@echo "make vivado-tcl    write synth/vivado_synth.tcl + constraints.xdc for the customer's Vivado (never overwrites)"
 	@echo "make synth-vivado  run synth/vivado_synth.tcl if vivado is on PATH (customer side)"
 
 lint: lint-verilator lint-verible
@@ -66,6 +71,10 @@ synth:
 	@mkdir -p synth
 	yosys -q -l synth/yosys.log -p "read_verilog -sv $(SRCS); hierarchy -top $(SYNTH_TOP); synth_xilinx -family xcup -noiopad -top $(SYNTH_TOP); tee -q -o synth/yosys_stat.txt stat; write_json synth/$(SYNTH_TOP).json"
 	@grep -v "^$$" synth/yosys_stat.txt | grep -v "Printing statistics\|^===\|Local Count\|^ *| *$$"
+	@$(MAKE) --no-print-directory vivado-tcl
+
+vivado-tcl:
+	@python3 $(ROOT_DIR)/tools/gen_vivado_tcl.py --block $(BLOCK_DIR:$(ROOT_DIR)/%=%) --top $(SYNTH_TOP) --srcs $(SRCS) --clk $(CLK_PORT) --mhz $(CLK_MHZ) --part $(PART)
 
 synth-vivado:
 	@if command -v vivado >/dev/null 2>&1; then (cd synth && vivado -mode batch -source vivado_synth.tcl); \
