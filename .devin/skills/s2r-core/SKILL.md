@@ -30,7 +30,7 @@ directory (e.g. `blocks/axis_skid_buffer/`) is its own project: `cd` there befor
 |---|---|
 | `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash` | Normal file and shell tools |
 | A bare path on its own line (`Read .devin/skills/s2r-core/...`, `.planning/STATE.md`) | Read that file before continuing — these were `@include`s |
-| `Task(prompt=..., subagent_type="s2r-X")` | `run_subagent` whose prompt is `agents/s2r-X.md` followed by the given prompt. Spawn the Tasks listed in one wave in parallel; wait for all. `subagent_type="general-purpose"` = a subagent with no agent preamble |
+| `Task(prompt=..., subagent_type="s2r-X")` | If a subagent tool is available (`run_subagent`, child sessions): spawn one whose prompt is `agents/s2r-X.md` followed by the given prompt; spawn a wave's Tasks in parallel and wait for all. **If not (common on Devin Desktop): read `agents/s2r-X.md`, adopt it as your instructions, and do the work inline, one Task at a time, in wave order.** `subagent_type="general-purpose"` = no agent preamble |
 | `AskUserQuestion` with header/question/options | `message_user` with `content_type=user_question`, `block_on_user=true`; the options become the clickable choices |
 | `TodoWrite` | `task_create` / `task_update` |
 | `model="..."`, model profiles (`quality`/`balanced`/`budget`), `/s2r:set-profile` | Ignore; Devin has one model. Keep `config.json` keys so upstream files stay valid |

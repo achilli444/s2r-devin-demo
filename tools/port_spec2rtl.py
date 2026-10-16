@@ -24,7 +24,8 @@ SKIP_COMMANDS = {"update", "join-discord"}
 RUNTIME_NOTE = """> **Devin runtime.** This skill is a port of the Spec2RTL `/s2r:{cmd}` command.
 > Before following it, read `{core}/SKILL.md` (tool mapping, path conventions, what to ignore).
 > Any path under `{core}/` or `.planning/` that this skill lists is a file you must read.
-> `Task(...)` = spawn a subagent whose prompt starts with the named agent file from `{core}/agents/`.
+> `Task(...)` = spawn a subagent whose prompt starts with the named agent file from `{core}/agents/`;
+> if no subagent tool is available, read that agent file and do its work inline, one Task at a time.
 > `AskUserQuestion` = ask the user with `message_user` (`content_type=user_question`).
 > `model=...` / model profiles are ignored on Devin.
 """

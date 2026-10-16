@@ -6,7 +6,8 @@ description: Research how to implement a phase (standalone - usually use /s2r:pl
 > **Devin runtime.** This skill is a port of the Spec2RTL `/s2r:research-phase` command.
 > Before following it, read `.devin/skills/s2r-core/SKILL.md` (tool mapping, path conventions, what to ignore).
 > Any path under `.devin/skills/s2r-core/` or `.planning/` that this skill lists is a file you must read.
-> `Task(...)` = spawn a subagent whose prompt starts with the named agent file from `.devin/skills/s2r-core/agents/`.
+> `Task(...)` = spawn a subagent whose prompt starts with the named agent file from `.devin/skills/s2r-core/agents/`;
+> if no subagent tool is available, read that agent file and do its work inline, one Task at a time.
 > `AskUserQuestion` = ask the user with `message_user` (`content_type=user_question`).
 > `model=...` / model profiles are ignored on Devin.
 
