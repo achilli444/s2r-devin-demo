@@ -18,7 +18,7 @@ Update: bump `upstream/`, re-run `python3 tools/port_spec2rtl.py`, commit.
 
 ## Demo
 
-`demo/RUNBOOK.md` is the Devin Desktop run of show (setup checklist, which `SKILL.md` to have open at each step, exact prompts, expected tool output, reset and recovery). Blocks:
+`demo/SCRIPT.md` is the verbatim narration + click-by-click script for recording the demo; `demo/RUNBOOK.md` is the Devin Desktop run of show (setup checklist, which `SKILL.md` to have open at each step, exact prompts, expected tool output, reset and recovery). Blocks:
 
 | Block | State | Evidence |
 |---|---|---|
