@@ -12,7 +12,7 @@
 | `rst_n` | in | 1 | async assert, sync de-assert |
 | `in_data` | in | 16 | signed, Q1.15 |
 | `in_valid` | in | 1 | continuous streaming (no back-pressure in v1) |
-| `out_data` | out | 32 | signed, full-precision accumulator (16x18 products, 25 taps) — downstream rounds |
+| `out_data` | out | 39 | signed, full-precision accumulator (16x18 products, 25 taps) — downstream rounds |
 | `out_valid` | out | 1 | one pulse per two input samples |
 
 Parameters: `IN_W=16`, `COEF_W=18` (DSP48E2 B-port width), `NTAPS=25` (odd, linear-phase symmetric), `DECIM=2`.

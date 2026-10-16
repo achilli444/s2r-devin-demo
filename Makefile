@@ -1,5 +1,5 @@
 # Top-level helpers. Per-block targets live in blocks/<name>/Makefile (see mk/block.mk).
-BLOCKS := $(notdir $(wildcard blocks/*))
+BLOCKS := $(patsubst blocks/%/Makefile,%,$(wildcard blocks/*/Makefile))   # blocks that have been built (spec-only blocks are skipped)
 SIM ?= icarus
 
 .PHONY: help doctor install lint sim formal synth clean $(BLOCKS)

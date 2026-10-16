@@ -1,0 +1,24 @@
+
+4. Printing statistics.
+
+=== rr_arbiter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       63 wires
+      122 wire bits
+        6 public wires
+       22 public wire bits
+        6 ports
+       22 port bits
+       45 cells
+        1   BUFG
+        5   CARRY4
+        3   FDCE
+        8   INV
+        6   LUT2
+        5   LUT3
+        9   LUT4
+        6   LUT5
+        2   LUT6
+

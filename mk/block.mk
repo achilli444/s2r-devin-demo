@@ -42,26 +42,30 @@ lint-verilator:
 	verilator --lint-only -Wall --top-module $(TOP) $(LINT_ARGS) $(SRCS)
 lint-verible:
 	@if command -v verible-verilog-lint >/dev/null 2>&1; then \
-	  verible-verilog-lint --rules_config_search $(SRCS); \
+	  verible-verilog-lint --rules_config=$(ROOT_DIR)/.rules.verible_lint $(SRCS); \
 	else echo "verible-verilog-lint not installed; skipping"; fi
 
 # cocotb's own makefile provides the `sim` target
 include $(shell cocotb-config --makefiles)/Makefile.sim
 
 wave:
-	@f=$$(ls -t $(SIM_BUILD)/*.fst $(SIM_BUILD)/*.vcd dump.fst dump.vcd 2>/dev/null | head -1); \
+	@f=$$(ls -t $(SIM_BUILD)/*/*.fst $(SIM_BUILD)/*/*.vcd $(SIM_BUILD)/*.fst $(SIM_BUILD)/*.vcd dump.fst dump.vcd 2>/dev/null | head -1); \
 	[ -n "$$f" ] || { echo "no waveform found; run make sim WAVES=1"; exit 1; }; \
 	echo "opening $$f"; \
 	if command -v surfer >/dev/null 2>&1; then surfer "$$f" & elif command -v gtkwave >/dev/null 2>&1; then gtkwave "$$f" & else echo "no viewer installed"; fi
 
 formal:
+ifeq ($(SBY),)
+	@echo "$(TOP): no SBY file (no formal properties) — skipping"
+else
 	@[ -n "$(SBY)" ] || { echo "no SBY configs for this block"; exit 1; }
 	@for s in $(SBY); do echo "=== sby $$s"; (cd formal && sby -f $$(basename $$s)) || exit 1; done
+endif
 
 synth:
 	@mkdir -p synth
-	yosys -q -l synth/yosys.log -p "read_verilog -sv $(SRCS); hierarchy -top $(SYNTH_TOP); synth_xilinx -family xcup -top $(SYNTH_TOP); tee -q -o synth/yosys_stat.txt stat; write_json synth/$(SYNTH_TOP).json"
-	@sed -n '/Number of cells/,$$p' synth/yosys_stat.txt
+	yosys -q -l synth/yosys.log -p "read_verilog -sv $(SRCS); hierarchy -top $(SYNTH_TOP); synth_xilinx -family xcup -noiopad -top $(SYNTH_TOP); tee -q -o synth/yosys_stat.txt stat; write_json synth/$(SYNTH_TOP).json"
+	@grep -v "^$$" synth/yosys_stat.txt | grep -v "Printing statistics\|^===\|Local Count\|^ *| *$$"
 
 synth-vivado:
 	@if command -v vivado >/dev/null 2>&1; then (cd synth && vivado -mode batch -source vivado_synth.tcl); \
