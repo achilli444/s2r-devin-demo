@@ -19,11 +19,18 @@ case "$OS-$ARCH" in
   *) echo "unsupported platform $OS-$ARCH"; exit 1 ;;
 esac
 
+
+# latest release tag of a GitHub repo without the REST API (rate-limited / blocked on some networks)
+latest_tag() {
+  if command -v gh >/dev/null 2>&1; then gh release view --repo "$1" --json tagName --jq .tagName 2>/dev/null && return; fi
+  curl -fsSLI -o /dev/null -w '%{url_effective}' "https://github.com/$1/releases/latest" | sed 's#.*/tag/##'
+}
+
 mkdir -p "$EDA_DIR"; cd "$EDA_DIR"
 
 # ---- OSS CAD Suite -----------------------------------------------------------
 if [ ! -x "$EDA_DIR/oss-cad-suite/bin/yosys" ]; then
-  TAG="${OSS_CAD_TAG:-$(curl -fsSL https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')}"
+  TAG="${OSS_CAD_TAG:-$(latest_tag YosysHQ/oss-cad-suite-build)}"
   TARBALL="oss-cad-suite-${PLAT}-${TAG//-/}.tgz"
   URL="https://github.com/YosysHQ/oss-cad-suite-build/releases/download/${TAG}/${TARBALL}"
   echo ">> downloading OSS CAD Suite ${TAG} (${PLAT}) ~1 GB"
@@ -42,11 +49,14 @@ fi
 # ---- Verible (optional) ------------------------------------------------------
 if ! command -v verible-verilog-lint >/dev/null 2>&1 && [ ! -x "$EDA_DIR/verible/bin/verible-verilog-lint" ]; then
   echo ">> installing Verible"
-  if [ "$OS" = Darwin ] && command -v brew >/dev/null 2>&1; then
-    brew install verible || echo "!! brew install verible failed; lint will skip Verible"
-  elif [ "$OS" = Linux ] && [ "$ARCH" = x86_64 ]; then
-    VTAG="$(curl -fsSL https://api.github.com/repos/chipsalliance/verible/releases/latest | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')"
-    VURL="https://github.com/chipsalliance/verible/releases/download/${VTAG}/verible-${VTAG}-linux-static-x86_64.tar.gz"
+  VTAG="${VERIBLE_TAG:-$(latest_tag chipsalliance/verible)}"
+  case "$PLAT" in
+    linux-x64)   VASSET="verible-${VTAG}-linux-static-x86_64.tar.gz" ;;
+    linux-arm64) VASSET="verible-${VTAG}-linux-static-arm64.tar.gz" ;;
+    darwin-*)    VASSET="verible-${VTAG}-macOS.tar.gz" ;;
+  esac
+  if [ -n "${VASSET:-}" ]; then
+    VURL="https://github.com/chipsalliance/verible/releases/download/${VTAG}/${VASSET}"
     if curl -fL --progress-bar -o verible.tgz "$VURL"; then
       rm -rf verible && mkdir verible && tar xzf verible.tgz -C verible --strip-components=1 && rm -f verible.tgz
     else
