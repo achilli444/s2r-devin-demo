@@ -42,7 +42,7 @@ lint-verilator:
 	verilator --lint-only -Wall --top-module $(TOP) $(LINT_ARGS) $(SRCS)
 lint-verible:
 	@if command -v verible-verilog-lint >/dev/null 2>&1; then \
-	  verible-verilog-lint --rules_config_search $(SRCS); \
+	  verible-verilog-lint --rules_config=$(ROOT_DIR)/.rules.verible_lint $(SRCS); \
 	else echo "verible-verilog-lint not installed; skipping"; fi
 
 # cocotb's own makefile provides the `sim` target
