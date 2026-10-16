@@ -193,7 +193,7 @@ Run the s2r execute-phase skill for phase 1, then again for phase 2. For verific
 **SAY**
 "Same testbench, both simulators, all passing. Random back-pressure on both sides, stall bursts, and a direct test that `tready` doesn't move when the downstream handshake toggles mid-cycle."
 
-> **If a test fails on the first run — keep recording.** Say: "This is the loop. Devin reads the failing assertion, opens the waveform if it needs to, fixes the RTL, and re-runs." Let it iterate; say "run the s2r debug skill" if it stalls. Cut the waiting, keep the fix.
+> **If a test fails on the first run — keep recording.** Say: "This is the loop. Devin reads the failing assertion, opens the waveform if it needs to, fixes the RTL, and re-runs." Let it iterate; `/s2r:debug` if it stalls. Cut the waiting, keep the fix.
 
 ---
 

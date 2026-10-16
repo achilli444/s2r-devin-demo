@@ -11,7 +11,7 @@ upstream/spec2rtl-plugin/      pinned upstream snapshot (see PIN)
 tools/port_spec2rtl.py         regenerates .devin/skills from upstream
 ```
 
-Use: open the repo in Devin, `cd` into a block directory, and say "run the s2r new-project skill" (or `/s2r:new-project` where the chat does not intercept a leading `/`).
+Use: open the repo in Devin, `cd` into a block directory, and say `/s2r:new-project` (or "start a new Spec2RTL project from specs/x.md").
 Devin reads `.devin/skills/s2r-core/SKILL.md` for the tool mapping and follows the command skill.
 
 Update: bump `upstream/`, re-run `python3 tools/port_spec2rtl.py`, commit.
