@@ -19,7 +19,7 @@ cd blocks/rr_arbiter && make wave      # opens Surfer/GTKWave once so it is inst
 
 Devin Desktop:
 1. Open the repo folder. Devin reads `AGENTS.md` and discovers `.devin/skills/s2r-*`.
-2. New conversation, send `Run /s2r:help and list the Spec2RTL commands.` — the ported command list should print. Typing `/` opens Desktop's own slash-command picker (e.g. `/acp-commands:help`); the s2r skills are repo skills, not Desktop commands, so dismiss the picker (Esc) or start the message with a word, never pick an entry from it. Same for every `/s2r:` prompt below. If Devin says it does not know s2r, say "read .devin/skills/s2r-core/SKILL.md and list the s2r commands".
+2. New conversation, send `Run the s2r help skill and list the Spec2RTL commands.` — the ported command list should print. Never start a chat message with `/`: that opens Desktop's own slash-command picker (e.g. `/acp-commands:help`), which does not list repo skills. Every prompt below is phrased "Run the s2r <command> skill …" for that reason; Devin resolves it to `.devin/skills/s2r-<command>/SKILL.md`. If Devin says it does not know s2r, say "read .devin/skills/s2r-core/SKILL.md and list the s2r commands".
 3. Pin these editor tabs (left to right): `blocks/axis_skid/SPEC.md`, `.devin/skills/s2r-new-project/SKILL.md`, `.devin/skills/s2r-core/SKILL.md`, `blocks/rr_arbiter/.planning/HARDWARE_METRICS.md`.
 4. Do one timed dry run of section 3, then reset (section 5). Every number in the "expected" columns below was produced on Linux x86_64 with this repo; macOS arm64 gives the same pass/fail and cell counts, only wall-clock times differ.
 
@@ -49,15 +49,15 @@ Keep `blocks/axis_skid/SPEC.md` and `.devin/skills/s2r-new-project/SKILL.md` vis
 
 **3a. Spec -> requirements (5 min).** In Devin Desktop:
 
-> `/s2r:new-project` in `blocks/axis_skid`. The spec is `SPEC.md`. Ask me the open questions, then write `.planning/PROJECT.md`, `REQUIREMENTS.md` and `ROADMAP.md` (3 phases: RTL, verification, synthesis). Keep the questioning short.
+> Run the s2r new-project skill in `blocks/axis_skid`. The spec is `SPEC.md`. Ask me the open questions, then write `.planning/PROJECT.md`, `REQUIREMENTS.md` and `ROADMAP.md` (3 phases: RTL, verification, synthesis). Keep the questioning short.
 
 Answers to give on camera (the spec's "open questions"): data width parameter default 32; TUSER width parameter default 1, carry TLAST; no TKEEP; active-low async reset; target 300 MHz on UltraScale+; full throughput required. Then open the three generated files in the IDE and point at the must-haves: "TREADY must be driven from a register", "no drop / no duplicate / in order", "one word per clock when the sink is ready".
 
 **3b. Build + compile + simulate (7 min).**
 
-> `/s2r:execute-phase 1` then `/s2r:execute-phase 2`. For verification use cocotb with cocotbext-axi (random source gaps and sink stalls), run `make lint`, `make sim SIM=icarus` and `make sim SIM=verilator`, and paste the real output into the summary. Commit per task.
+> Run the s2r execute-phase skill for phase 1, then again for phase 2. For verification use cocotb with cocotbext-axi (random source gaps and sink stalls), run `make lint`, `make sim SIM=icarus` and `make sim SIM=verilator`, and paste the real output into the summary. Commit per task.
 
-While it runs: show `.devin/skills/s2r-execute-phase/SKILL.md` and `s2r-core/agents/s2r-executor.md` — the "run the tools, paste the output, atomic commit" rules Devin is following. Expect: lint clean; `TESTS=4 PASS=4` (or however many tests Devin writes) on both simulators. If a test fails first time, that is the demo: let Devin read the log, open the waveform (`make wave`) and fix; `/s2r:debug` if it stalls.
+While it runs: show `.devin/skills/s2r-execute-phase/SKILL.md` and `s2r-core/agents/s2r-executor.md` — the "run the tools, paste the output, atomic commit" rules Devin is following. Expect: lint clean; `TESTS=4 PASS=4` (or however many tests Devin writes) on both simulators. If a test fails first time, that is the demo: let Devin read the log, open the waveform (`make wave`) and fix; say "run the s2r debug skill" if it stalls.
 
 **3c. Waveform (2 min).** `cd blocks/axis_skid && make wave` — opens `sim_build/icarus/axis_skid.fst` in Surfer (or GTKWave). Add `clk, s_axis_tvalid, s_axis_tready, m_axis_tvalid, m_axis_tready`; find a sink stall: `m_axis_tready` drops, one more word is accepted, *then* `s_axis_tready` drops one clock later — "that's the skid, and that one-clock delay is the registered TREADY the spec asked for."
 
@@ -69,7 +69,7 @@ Expected (verified with the reference solution): the cocotb `tready_is_registere
 
 **3e. Formal + synthesis (2 min).**
 
-> `/s2r:execute-phase 3`: add SymbiYosys properties (AXI-Stream contract on both sides, 2-entry shadow queue proving no drop/dup/in-order, occupancy 0..2), run `make formal` and `make synth`, write `.planning/HARDWARE_METRICS.md`.
+> Run the s2r execute-phase skill for phase 3: add SymbiYosys properties (AXI-Stream contract on both sides, 2-entry shadow queue proving no drop/dup/in-order, occupancy 0..2), run `make formal` and `make synth`, write `.planning/HARDWARE_METRICS.md`.
 
 Expect: `successful proof by k-induction`, 3 covers reached; Yosys ~70 FF / ~37 LUT / 0 DSP. Open `HARDWARE_METRICS.md` as the closer.
 

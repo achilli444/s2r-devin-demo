@@ -132,10 +132,10 @@ Runtime target: 22–25 min after cuts.
 **SAY**
 "A skid buffer, for anyone new to it: AXI-Stream moves data with a valid-ready handshake. When the downstream block says 'not ready', something has to catch the word that's already in flight. A skid buffer holds two entries so the upstream doesn't have to react in the same clock cycle. That breaks a long combinational path on `tready`, and that's what lets the chip run faster."
 
-**DO** In Devin's chat, type exactly (tip: typing `/` first opens Desktop's own slash-command picker — press Esc or just keep typing; the `/s2r:` prompts are plain text that Devin resolves to the repo skills, never pick a picker entry):
+**DO** In Devin's chat, paste exactly (no prompt in this script starts with `/` — a leading slash opens Desktop's own slash-command picker, which does not know the repo skills):
 
 ```
-/s2r:new-project in blocks/axis_skid. The spec is SPEC.md. Ask me the open questions, then write .planning/PROJECT.md, REQUIREMENTS.md and ROADMAP.md with 3 phases: RTL, verification, synthesis. Keep the questioning short.
+Run the s2r new-project skill in blocks/axis_skid. The spec is SPEC.md. Ask me the open questions, then write .planning/PROJECT.md, REQUIREMENTS.md and ROADMAP.md with 3 phases: RTL, verification, synthesis. Keep the questioning short.
 ```
 
 **SAY** (while it reads the skill)
@@ -171,7 +171,7 @@ DATA_W parameter default 32. Carry TLAST and a TUSER_W parameter default 1. No T
 **DO** In Devin's chat:
 
 ```
-/s2r:execute-phase 1 then /s2r:execute-phase 2. For verification use cocotb with cocotbext-axi (random source gaps and sink stalls, plus a test that s_axis_tready does not change when m_axis_tready toggles mid-cycle). Run make lint, make sim SIM=icarus and make sim SIM=verilator, paste the real output into the summary, and commit per task.
+Run the s2r execute-phase skill for phase 1, then again for phase 2. For verification use cocotb with cocotbext-axi (random source gaps and sink stalls, plus a test that s_axis_tready does not change when m_axis_tready toggles mid-cycle). Run make lint, make sim SIM=icarus and make sim SIM=verilator, paste the real output into the summary, and commit per task.
 ```
 
 **DO** While Devin works, click tab `.devin/skills/s2r-execute-phase/SKILL.md`, then open `.devin/skills/s2r-core/agents/s2r-executor.md`.
@@ -193,7 +193,7 @@ DATA_W parameter default 32. Carry TLAST and a TUSER_W parameter default 1. No T
 **SAY**
 "Same testbench, both simulators, all passing. Random back-pressure on both sides, stall bursts, and a direct test that `tready` doesn't move when the downstream handshake toggles mid-cycle."
 
-> **If a test fails on the first run — keep recording.** Say: "This is the loop. Devin reads the failing assertion, opens the waveform if it needs to, fixes the RTL, and re-runs." Let it iterate; `/s2r:debug` if it stalls. Cut the waiting, keep the fix.
+> **If a test fails on the first run — keep recording.** Say: "This is the loop. Devin reads the failing assertion, opens the waveform if it needs to, fixes the RTL, and re-runs." Let it iterate; say "run the s2r debug skill" if it stalls. Cut the waiting, keep the fix.
 
 ---
 
@@ -229,7 +229,7 @@ An engineer suggests making s_axis_tready combinational — ~skid_valid & (m_axi
 **DO** In Devin's chat:
 
 ```
-/s2r:execute-phase 3: add SymbiYosys properties — AXI-Stream contract on both sides, a 2-entry shadow queue proving no drop, no duplicate and in-order delivery, occupancy never above 2, and s_axis_tready registered — then run make formal and make synth and write .planning/HARDWARE_METRICS.md.
+Run the s2r execute-phase skill for phase 3: add SymbiYosys properties — AXI-Stream contract on both sides, a 2-entry shadow queue proving no drop, no duplicate and in-order delivery, occupancy never above 2, and s_axis_tready registered — then run make formal and make synth and write .planning/HARDWARE_METRICS.md.
 ```
 
 **DO** While it works, open `blocks/rr_arbiter/formal/rr_arbiter_props.svh` for 5 s as an example of what properties look like.
