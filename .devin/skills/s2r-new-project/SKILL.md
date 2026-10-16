@@ -50,10 +50,10 @@ Read `.devin/skills/s2r-core/templates/requirements.md`
    [ -f .planning/PROJECT.md ] && echo "ERROR: Project already initialized. Use /s2r:progress" && exit 1
    ```
 
-2. **Initialize git repo in THIS directory** (required even if inside a parent repo):
+2. **Use the enclosing git repo** (never `git init` a nested repo when this directory is already inside one, e.g. `blocks/<name>/` of a monorepo):
    ```bash
-   if [ -d .git ] || [ -f .git ]; then
-       echo "Git repo exists in current directory"
+   if git rev-parse --show-toplevel >/dev/null 2>&1; then
+       echo "Using git repo at $(git rev-parse --show-toplevel)"
    else
        git init
        echo "Initialized new git repo"

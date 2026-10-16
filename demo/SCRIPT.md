@@ -269,6 +269,6 @@ An engineer suggests making s_axis_tready combinational — ~skid_valid & (m_axi
 ## Appendix — recovery and reset
 
 - Live run goes sideways → `cp -r demo/reference/axis_skid/* blocks/axis_skid/` and resume at Scene 6's `make sim`. The reference is verified: lint clean, cocotb 4/4 on both simulators, sby proof and cover pass, ~70 FF / 37 LUT.
-- Reset between takes → `git checkout -- blocks/axis_skid && git clean -fdx blocks/axis_skid`; `git reset --hard origin/main` if Devin committed.
+- Reset between takes → `rm -rf blocks/axis_skid/.git && git checkout -- blocks/axis_skid && git clean -fdx blocks/axis_skid`; `git reset --hard origin/main` if Devin committed.
 - Numbers quoted above were measured on Linux x86_64 with this repo; pass/fail and cell counts match on macOS, wall-clock times differ. If Devin's live run produces different test counts or cell counts, read the numbers off the screen — don't read the script's.
 - Never quote Fmax/WNS. Never describe Yosys DSP counts as Vivado results.

@@ -54,6 +54,31 @@ def rewrite_body(text: str) -> str:
     text = re.sub(r"\bgsd:", "s2r:", text)
     text = text.replace('"gsd/', '"s2r/')
     text = re.sub(r"^\s*Co-Authored-By: Claude.*\n", "", text, flags=re.M)
+    # Spec2RTL assumes one repo per project; our blocks live inside a monorepo, so reuse the enclosing repo.
+    text = text.replace(
+        '2. **Initialize git repo in THIS directory** (required even if inside a parent repo):\n'
+        '   ```bash\n'
+        '   if [ -d .git ] || [ -f .git ]; then\n'
+        '       echo "Git repo exists in current directory"\n'
+        '   else\n'
+        '       git init\n'
+        '       echo "Initialized new git repo"\n'
+        '   fi\n'
+        '   ```',
+        '2. **Use the enclosing git repo** (never `git init` a nested repo when this directory is already inside one, e.g. `blocks/<name>/` of a monorepo):\n'
+        '   ```bash\n'
+        '   if git rev-parse --show-toplevel >/dev/null 2>&1; then\n'
+        '       echo "Using git repo at $(git rev-parse --show-toplevel)"\n'
+        '   else\n'
+        '       git init\n'
+        '       echo "Initialized new git repo"\n'
+        '   fi\n'
+        '   ```',
+    )
+    text = text.replace(
+        '```bash\ngit init\ngit add .\ngit commit -m "chore: initialize project structure"\n```',
+        '```bash\ngit rev-parse --show-toplevel >/dev/null 2>&1 || git init   # reuse the enclosing repo when inside one\ngit add .\ngit commit -m "chore: initialize project structure"\n```',
+    )
     # Vendor/runtime naming.
     text = text.replace("Claude Code", "Devin")
     text = re.sub(r"\bClaude's\b", "Devin's", text)

@@ -86,7 +86,7 @@ EOF
 Initialize git repository if not already present.
 
 ```bash
-git init
+git rev-parse --show-toplevel >/dev/null 2>&1 || git init   # reuse the enclosing repo when inside one
 git add .
 git commit -m "chore: initialize project structure"
 ```
