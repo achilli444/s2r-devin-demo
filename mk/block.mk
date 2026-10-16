@@ -49,7 +49,7 @@ lint-verible:
 include $(shell cocotb-config --makefiles)/Makefile.sim
 
 wave:
-	@f=$$(ls -t $(SIM_BUILD)/*.fst $(SIM_BUILD)/*.vcd dump.fst dump.vcd 2>/dev/null | head -1); \
+	@f=$$(ls -t $(SIM_BUILD)/*/*.fst $(SIM_BUILD)/*/*.vcd $(SIM_BUILD)/*.fst $(SIM_BUILD)/*.vcd dump.fst dump.vcd 2>/dev/null | head -1); \
 	[ -n "$$f" ] || { echo "no waveform found; run make sim WAVES=1"; exit 1; }; \
 	echo "opening $$f"; \
 	if command -v surfer >/dev/null 2>&1; then surfer "$$f" & elif command -v gtkwave >/dev/null 2>&1; then gtkwave "$$f" & else echo "no viewer installed"; fi
