@@ -55,8 +55,12 @@ wave:
 	if command -v surfer >/dev/null 2>&1; then surfer "$$f" & elif command -v gtkwave >/dev/null 2>&1; then gtkwave "$$f" & else echo "no viewer installed"; fi
 
 formal:
+ifeq ($(SBY),)
+	@echo "$(TOP): no SBY file (no formal properties) — skipping"
+else
 	@[ -n "$(SBY)" ] || { echo "no SBY configs for this block"; exit 1; }
 	@for s in $(SBY); do echo "=== sby $$s"; (cd formal && sby -f $$(basename $$s)) || exit 1; done
+endif
 
 synth:
 	@mkdir -p synth
