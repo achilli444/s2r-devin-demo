@@ -97,16 +97,21 @@ async def sink_stall_bursts(dut):
 
 @cocotb.test()
 async def tready_is_registered(dut):
-    """s_axis_tready must not change when m_axis_tready toggles within the same cycle (no combinational path)."""
+    """s_axis_tready must not change when m_axis_tready toggles within the same cycle (no combinational path).
+    The buffer must be holding a word for this to be a real test: an empty buffer is ready regardless."""
     tb = TB(dut)
     await tb.reset()
-    tb.set_pause()
-    dut.m_axis_tready.value = 0
-    await RisingEdge(dut.clk)
+    tb.set_pause(sink_gen=itertools.repeat(True))          # sink stalled
+    await tb.source.send(AxiStreamFrame(bytes(len(dut.s_axis_tdata) // 8)))
+    for _ in range(20):
+        await RisingEdge(dut.clk)
+        if int(dut.m_axis_tvalid.value):
+            break
+    assert int(dut.m_axis_tvalid.value), "buffer never filled"
     await Timer(1, unit="ns")
     for v in (1, 0, 1, 0):
         before = int(dut.s_axis_tready.value)
-        dut.m_axis_tready.value = v
+        dut.m_axis_tready.value = v                        # poke the sink handshake mid-cycle
         await Timer(1, unit="ns")
         assert int(dut.s_axis_tready.value) == before, "s_axis_tready changed combinationally with m_axis_tready"
-    dut._log.info("s_axis_tready stable against same-cycle m_axis_tready changes")
+    dut._log.info("s_axis_tready stable against same-cycle m_axis_tready changes while holding data")
